@@ -94,6 +94,17 @@ git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git
 goreleaser build --clean --single-target --snapshot
 ```
 
+## 打包部署
+打包前端资源包：
+```shell
+cd assets && rm -rf build && yarn install --network-timeout 1000000 && yarn run build && cd ../ && zip -r - assets/build >assets.zip
+```
+
+编译后端：
+```shell
+go build -ldflags="-s -w" -o cloudreve.exe main.go
+```
+
 ## :alembic: 技术栈
 
 * [Go](https://golang.org/) + [Gin](https://github.com/gin-gonic/gin)
