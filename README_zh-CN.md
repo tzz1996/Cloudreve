@@ -114,7 +114,14 @@ yarn run build
 cd ../ && zip -r - assets/build >assets.zip
 ```
 
-编译后端：
+单独运行前端：
+```shell
+cd assets/frontend
+yarn start
+```
+
+
+编译后端并打包前端assets.zip：
 ```shell
 go build -ldflags="-s -w" -o cloudreve.exe main.go
 ```
