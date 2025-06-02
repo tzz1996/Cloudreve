@@ -94,6 +94,16 @@ git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git
 goreleaser build --clean --single-target --snapshot
 ```
 
+#### 3.8.3版本记录
+node.js版本：`v14.21.3`
+
+yarn版本：`1.22.22`
+
+安装yarn：
+```shell
+npm install --global yarn
+```
+
 ## 打包部署
 打包前端资源包：
 ```shell
