@@ -344,3 +344,41 @@ func (folder *Folder) IsDir() bool {
 func (folder *Folder) GetPosition() string {
 	return folder.Position
 }
+
+// GetFoldersByKeywords 根据关键字搜索目录
+// UID为0表示忽略用户，只根据目录ID检索. 如果 parents 非空， 则只限制在 parent 包含的目录下搜索
+func GetFoldersByKeywords(uid uint, parents []uint, keywords ...interface{}) ([]Folder, error) {
+	var (
+		folders    []Folder
+		result     = DB
+		conditions string
+	)
+
+	// 生成查询条件
+	for i := 0; i < len(keywords); i++ {
+		conditions += "name like ?"
+		if i != len(keywords)-1 {
+			conditions += " or "
+		}
+	}
+
+	if uid != 0 {
+		result = result.Where("owner_id = ?", uid)
+	}
+
+	if len(parents) > 0 {
+		result = result.Where("parent_id in (?)", parents)
+	}
+
+	result = result.Where("("+conditions+")", keywords...).Find(&folders)
+
+	// 为每个文件夹设置路径信息
+	for i := range folders {
+		if err := folders[i].TraceRoot(); err != nil {
+			// 如果获取路径失败，至少设置一个基本路径
+			folders[i].Position = "/"
+		}
+	}
+
+	return folders, result.Error
+}

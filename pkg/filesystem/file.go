@@ -364,7 +364,7 @@ func (fs *FileSystem) resetPolicyToFirstFile(ctx context.Context) error {
 	return nil
 }
 
-// Search 搜索文件
+// Search 搜索文件和目录
 func (fs *FileSystem) Search(ctx context.Context, keywords ...interface{}) ([]serializer.Object, error) {
 	parents := make([]uint, 0)
 
@@ -380,8 +380,12 @@ func (fs *FileSystem) Search(ctx context.Context, keywords ...interface{}) ([]se
 		}
 	}
 
+	// 搜索文件
 	files, _ := model.GetFilesByKeywords(fs.User.ID, parents, keywords...)
 	fs.SetTargetFile(&files)
 
-	return fs.listObjects(ctx, "/", files, nil, nil), nil
+	// 搜索目录
+	folders, _ := model.GetFoldersByKeywords(fs.User.ID, parents, keywords...)
+
+	return fs.listObjects(ctx, "/", files, folders, nil), nil
 }

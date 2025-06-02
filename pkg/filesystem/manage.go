@@ -337,20 +337,18 @@ func (fs *FileSystem) listObjects(ctx context.Context, parent string, files []mo
 	var processedPath string
 
 	for _, subFolder := range folders {
-		// 路径处理钩子，
-		// 所有对象父目录都是一样的，所以只处理一次
-		if processedPath == "" {
-			if pathProcessor != nil {
-				processedPath = pathProcessor(parent)
-			} else {
-				processedPath = parent
-			}
+		// 优先使用 subFolder.Position 作为 Path
+		var folderPath string
+		if subFolder.Position != "" {
+			folderPath = subFolder.Position
+		} else {
+			folderPath = parent
 		}
 
 		objects = append(objects, serializer.Object{
 			ID:         hashid.HashID(subFolder.ID, hashid.FolderID),
 			Name:       subFolder.Name,
-			Path:       processedPath,
+			Path:       folderPath,
 			Size:       0,
 			Type:       "dir",
 			Date:       subFolder.UpdatedAt,
