@@ -97,7 +97,11 @@ goreleaser build --clean --single-target --snapshot
 ## 打包部署
 打包前端资源包：
 ```shell
-cd assets && rm -rf build && yarn install --network-timeout 1000000 && yarn run build && cd ../ && zip -r - assets/build >assets.zip
+cd assets
+rm -rf build
+yarn install --network-timeout 1000000
+yarn run build
+cd ../ && zip -r - assets/build >assets.zip
 ```
 
 编译后端：
